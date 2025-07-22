@@ -88,13 +88,25 @@ curl -X POST http://localhost:3001/api/focus-session \
 curl -H "x-api-key: hackathon-demo-key-2024" http://localhost:3001/api/focus-session
 ```
 
-### **Test 4: Get Session Logs (NEW FEATURE)**
+### **Test 4: Get Specific Session by ID**
 ```bash
-# First get a session ID from the previous command, then:
-curl -H "x-api-key: hackathon-demo-key-2024" http://localhost:3001/api/focus-session/SESSION_ID_HERE/logs
+# Use a session ID from the previous command:
+curl -H "x-api-key: hackathon-demo-key-2024" http://localhost:3001/api/focus-session/687f1f36838c1dea16d3b7f1
 ```
 
-### **Test 5: Test API Key Protection**
+### **Test 5: Get Session Processing Logs (NEW FEATURE)**
+```bash
+# Get detailed processing logs for a session:
+curl -H "x-api-key: hackathon-demo-key-2024" http://localhost:3001/api/focus-session/687f1f36838c1dea16d3b7f1/logs
+```
+
+### **Test 6: API Welcome & Features**
+```bash
+# Check API welcome message and feature list:
+curl http://localhost:3001/
+```
+
+### **Test 7: Test API Key Protection**
 ```bash
 # This should return 401 - Unauthorized
 curl http://localhost:3001/api/focus-session
@@ -159,40 +171,200 @@ curl -H "x-api-key: hackathon-demo-key-2024" http://localhost:3001/api/focus-ses
 
 ---
 
-## 🔧 **Step 4: Advanced Testing with Postman**
+## 🔧 **Step 4: Complete Postman Collection Setup**
 
-### **Import Collection**
-Create a Postman collection with these requests:
+### **📋 All API Endpoints You Should Have:**
 
-### **Request 1: Health Check**
-- **Method**: GET
+Based on your current Postman setup, here are **ALL 6 endpoints** you should add:
+
+### **✅ Request 1: API Welcome & Info**
+- **Method**: `GET`
+- **URL**: `http://localhost:3001/`
+- **Headers**: None needed (public endpoint)
+- **Description**: Shows API welcome message and features
+
+### **✅ Request 2: Health Check**
+- **Method**: `GET`
 - **URL**: `http://localhost:3001/api/health`
+- **Headers**: None needed (public endpoint)
+- **Description**: Check if API server is running
 
-### **Request 2: Create Session**
-- **Method**: POST
+### **✅ Request 3: Create New Focus Session**
+- **Method**: `POST`
 - **URL**: `http://localhost:3001/api/focus-session`
-- **Headers**: `Content-Type: application/json`
+- **Headers**: 
+  - `Content-Type: application/json`
+  - `x-api-key: hackathon-demo-key-2024`
 - **Body** (raw JSON):
 ```json
 {
-  "userId": "postman_test",
-  "startTime": "2024-01-22T09:00:00Z",
-  "endTime": "2024-01-22T10:00:00Z",
-  "mediaFilePath": "/postman/test_recording.mp4"
+  "userId": "postman_user_demo",
+  "startTime": "2024-07-22T10:00:00Z",
+  "endTime": "2024-07-22T11:30:00Z",
+  "mediaFilePath": "/postman/demo_recording.mp4"
 }
 ```
 
-### **Request 3: Get Sessions**
-- **Method**: GET  
+### **✅ Request 4: Get All Focus Sessions**
+- **Method**: `GET`
 - **URL**: `http://localhost:3001/api/focus-session`
+- **Headers**: 
+  - `x-api-key: hackathon-demo-key-2024`
+- **Description**: Retrieve all sessions with metadata
 
-### **Request 4: Get Session by ID**
-- **Method**: GET
-- **URL**: `http://localhost:3001/api/focus-session/SESSION_ID_HERE`
+### **✅ Request 5: Get Specific Session by ID**
+- **Method**: `GET`
+- **URL**: `http://localhost:3001/api/focus-session/687f1f36838c1dea16d3b7f1`
+- **Headers**: 
+  - `x-api-key: hackathon-demo-key-2024`
+- **Description**: Get detailed information about one session
+- **Note**: Replace `687f1f36838c1dea16d3b7f1` with actual session ID from previous requests
+
+### **✅ Request 6: Get Session Processing Logs (NEW!)**
+- **Method**: `GET`
+- **URL**: `http://localhost:3001/api/focus-session/687f1f36838c1dea16d3b7f1/logs`
+- **Headers**: 
+  - `x-api-key: hackathon-demo-key-2024`
+- **Description**: Get detailed processing logs and metadata for a session
+- **Note**: Replace `687f1f36838c1dea16d3b7f1` with actual session ID
+
+### **🚨 Request 7: Test Authentication (Should Fail)**
+- **Method**: `GET`
+- **URL**: `http://localhost:3001/api/focus-session`
+- **Headers**: None (no API key)
+- **Description**: This should return 401 Unauthorized to test security
+- **Expected Response**: 
+```json
+{
+  "success": false,
+  "message": "API key required. Please provide x-api-key header or apiKey query parameter.",
+  "hint": "For demo purposes, you can use: hackathon-demo-key-2024"
+}
+```
 
 ---
 
-## 🎬 **Step 5: Watch the Magic Happen**
+## 📝 **Step-by-Step Postman Setup Guide**
+
+### **Step 1: Create New Collection**
+1. Open Postman
+2. Click "New" → "Collection"
+3. Name it: `Eden Focus Tracker API`
+4. Add description: `Complete API testing for Eden.pm Hackathon Challenge`
+
+### **Step 2: Add All 7 Requests**
+
+**For each request above:**
+1. Click "Add Request" in your collection
+2. Set the Method (GET/POST)
+3. Enter the URL
+4. Add Headers in "Headers" tab
+5. For POST request, add Body in "Body" tab → "raw" → "JSON"
+
+### **Step 3: Set Up Environment Variables (Optional but Pro)**
+1. Create new Environment: `Eden Focus Tracker Local`
+2. Add variables:
+   - `base_url`: `http://localhost:3001`
+   - `api_key`: `hackathon-demo-key-2024`
+3. Use `{{base_url}}` and `{{api_key}}` in requests
+
+### **Step 4: Test in Order**
+1. **API Welcome** → Should show features list
+2. **Health Check** → Should return success
+3. **Create Session** → Should return session ID (save this!)
+4. **Get All Sessions** → Should show your created session
+5. **Get Session by ID** → Use ID from step 3
+6. **Get Session Logs** → Use same ID to see processing details
+7. **Test Auth** → Should fail with 401
+
+---
+
+---
+
+## 📊 **Step 5: Expected Postman Responses**
+
+### **Response 1: API Welcome (GET /)**
+```json
+{
+  "message": "Welcome to Focus Session Tracker API",
+  "version": "2.0.0",
+  "features": ["FFmpeg Processing", "AWS S3 Simulation", "API Key Auth", "Rate Limiting"],
+  "endpoints": {
+    "health": "GET /api/health (public)",
+    "createSession": "POST /api/focus-session (protected)",
+    "getSessions": "GET /api/focus-session (protected)",
+    "getSession": "GET /api/focus-session/:id (protected)",
+    "getSessionLogs": "GET /api/focus-session/:id/logs (protected)"
+  },
+  "authentication": {
+    "method": "API Key",
+    "header": "x-api-key",
+    "demoKey": "hackathon-demo-key-2024"
+  }
+}
+```
+
+### **Response 3: Create Session (POST /api/focus-session)**
+```json
+{
+  "success": true,
+  "sessionId": "687f1f36838c1dea16d3b7f1",
+  "message": "Focus session logged and media processed successfully",
+  "data": {
+    "userId": "postman_user_demo",
+    "sessionDuration": 90,
+    "processed": true,
+    "processedAt": "2024-07-22T11:35:42.123Z",
+    "s3Data": {
+      "bucket": "focus-tracker-media-bucket",
+      "region": "us-east-1",
+      "uploadResults": {
+        "compressed": {
+          "key": "687f1f36838c1dea16d3b7f1/compressed_demo_recording.mp4",
+          "url": "https://focus-tracker-media-bucket.s3.us-east-1.amazonaws.com/...",
+          "size": 45000000,
+          "contentType": "video/mp4"
+        },
+        "audio": {
+          "key": "687f1f36838c1dea16d3b7f1/audio_demo_recording.mp3",
+          "url": "https://focus-tracker-media-bucket.s3.us-east-1.amazonaws.com/...",
+          "size": 3500000,
+          "contentType": "audio/mpeg"
+        }
+      }
+    }
+  }
+}
+```
+
+### **Response 6: Session Logs (GET /api/focus-session/:id/logs)**
+```json
+{
+  "success": true,
+  "message": "Processing logs retrieved successfully",
+  "data": {
+    "sessionId": "687f1f36838c1dea16d3b7f1",
+    "userId": "postman_user_demo",
+    "processingStatus": "completed",
+    "totalProcessingTime": 3,
+    "sessionDuration": 90,
+    "detailedLogs": [
+      "📁 Analyzing media file: /postman/demo_recording.mp4",
+      "🎬 Starting FFmpeg compression process...",
+      "⚡ Compressing video with H.264 codec...",
+      "🎵 Extracting audio track to MP3 format...",
+      "✅ Media processing completed successfully",
+      "☁️ Uploading to AWS S3 bucket: focus-tracker-media-bucket",
+      "📦 Upload completed with presigned URLs"
+    ],
+    "logCount": 7
+  }
+}
+```
+
+---
+
+## 🎬 **Step 6: Watch the Magic Happen**
 
 ### **What to Look For:**
 
@@ -262,16 +434,42 @@ Create a Postman collection with these requests:
 
 ## 🏆 **Perfect Demo Checklist**
 
+### **✅ Backend API Testing (Postman)**
 - [ ] Backend starts and connects to MongoDB Atlas
-- [ ] Frontend loads beautiful interface
-- [ ] Health check API responds correctly
-- [ ] Can create session via API (curl/Postman)
+- [ ] Health check API responds correctly (`GET /api/health`)
+- [ ] API Welcome shows all features (`GET /`)
+- [ ] Can create session via Postman (`POST /api/focus-session`)
+- [ ] Can get all sessions (`GET /api/focus-session`)
+- [ ] Can get specific session by ID (`GET /api/focus-session/:id`)
+- [ ] Can get session processing logs (`GET /api/focus-session/:id/logs`)
+- [ ] Authentication protection works (401 without API key)
+- [ ] All responses include proper JSON format
+
+### **✅ Frontend Web Demo Testing**
+- [ ] Frontend loads beautiful Eden.pm interface
 - [ ] Can create session via web interface
+- [ ] Session history displays correctly
+- [ ] Sessions count is accurate (shows all entries)
+- [ ] Details and Logs buttons work
+- [ ] Success responses are clearly visible
+- [ ] No errors in browser console
+
+### **✅ Database & Integration**
 - [ ] Sessions appear in MongoDB Atlas
 - [ ] Processing logs show in terminal
-- [ ] Session history displays on frontend
-- [ ] All responses include proper JSON format
-- [ ] No errors in browser console
+- [ ] Session count matches between frontend/backend/database
+- [ ] All processing simulation completes successfully
+
+### **📱 Complete Postman Collection URLs**
+```
+1. GET  http://localhost:3001/
+2. GET  http://localhost:3001/api/health
+3. POST http://localhost:3001/api/focus-session (with API key + body)
+4. GET  http://localhost:3001/api/focus-session (with API key)
+5. GET  http://localhost:3001/api/focus-session/SESSION_ID (with API key)
+6. GET  http://localhost:3001/api/focus-session/SESSION_ID/logs (with API key)
+7. GET  http://localhost:3001/api/focus-session (without API key - should fail)
+```
 
 ---
 
