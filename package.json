@@ -1,0 +1,26 @@
+{
+  "name": "focus-session-tracker",
+  "version": "1.0.0",
+  "description": "Focus session productivity tracker with media processing simulation",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "start:backend": "cd backend && npm start",
+    "build:frontend": "cd frontend && npm run build",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": [
+    "productivity",
+    "focus",
+    "tracking",
+    "hackathon"
+  ],
+  "author": "Team Focus",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.2.0",
+    "mongodb": "3.7",
+    "mongoose": "^8.16.4"
+  }
+}

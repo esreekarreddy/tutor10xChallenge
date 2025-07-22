@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/server.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb_uri",
+    "PORT": "3001",
+    "NODE_ENV": "production",
+    "API_KEY": "@api_key"
+  }
+} 
